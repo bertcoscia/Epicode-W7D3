@@ -17,7 +17,7 @@ const fetchBooks = () => {
       // creo un riferimento al .row
       const row = document.querySelector(".row");
 
-      const shoppingCart = [];
+      const shoppingCartArray = [];
 
       // creo una card per ogni elemento
       booksObject.forEach((book) => {
@@ -78,30 +78,76 @@ const fetchBooks = () => {
         buyBtn.classList.add("btn-success");
         buyBtn.classList.add("buy-btn");
         buyBtn.classList.add("d-block");
-        buyBtn.innerText = "Buy book";
-        buyBtn.addEventListener("click", () => {
-          // variabile flag
-          let isDuplicate = false;
-
-          // per ogni elemento di shoppingCart: se l'oggetto selezionato esiste già non si potrà continuare
-          shoppingCart.forEach((bookInArray) => {
-            if (bookInArray.asin === book.asin && bookInArray.category === book.category && bookInArray.img === book.img && bookInArray.price === book.price && bookInArray.title === book.title) {
-              isDuplicate = true;
-              window.alert("You have already added this book to your shopping cart");
-            }
-          });
-          if (!isDuplicate) {
-            shoppingCart.push(book);
-          }
-          console.log(shoppingCart);
-        });
-        cardBody.appendChild(buyBtn);
+        buyBtn.innerText = "Add to cart";
 
         // genero il div che contiene la card
         const col = document.createElement("div");
         col.classList.add("col");
         col.appendChild(card);
         row.appendChild(col);
+
+        buyBtn.addEventListener("click", () => {
+          // variabile flag
+          let isDuplicate = false;
+
+          const shoppingCartModalBody = document.querySelector(".modal-body");
+
+          // per ogni elemento di shoppingCart: se l'oggetto selezionato esiste già non si potrà continuare
+          shoppingCartArray.forEach((bookInArray, index) => {
+            if (bookInArray.asin === book.asin && bookInArray.category === book.category && bookInArray.img === book.img && bookInArray.price === book.price && bookInArray.title === book.title) {
+              isDuplicate = true;
+              window.alert("You have already added this book to your shopping cart");
+            } else {
+              const item = document.createElement("div");
+              item.classList.add("row");
+              item.classList.add("mb-3");
+              item.setAttribute("id", `${bookInArray.title}`);
+
+              const itemImg = document.createElement("img");
+              itemImg.setAttribute("src", `${bookInArray.img}`);
+              itemImg.classList.add("col-4");
+              item.appendChild(itemImg);
+
+              const itemDescription = document.createElement("div");
+              itemDescription.classList.add("col-8");
+              itemDescription.classList.add("row");
+              item.appendChild(itemDescription);
+
+              const itemName = document.createElement("h5");
+              itemName.classList.add("col-12");
+              itemName.innerText = bookInArray.title;
+              itemDescription.appendChild(itemName);
+
+              const itemPriceAndDeleteContainer = document.createElement("div");
+              itemPriceAndDeleteContainer.classList.add("col-12");
+              itemPriceAndDeleteContainer.classList.add("d-flex");
+              itemPriceAndDeleteContainer.classList.add("justify-content-between");
+              const itemPrice = document.createElement("p");
+              itemPrice.innerText = `$${bookInArray.price}`;
+              const deleteItemBtn = document.createElement("svg");
+              deleteItemBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+</svg>`;
+
+              itemPriceAndDeleteContainer.appendChild(itemPrice);
+              itemPriceAndDeleteContainer.appendChild(deleteItemBtn);
+              itemDescription.appendChild(itemPriceAndDeleteContainer);
+
+              shoppingCartModalBody.appendChild(item);
+              deleteItemBtn.addEventListener("click", () => {
+                shoppingCartArray.splice(index, 1);
+                console.log(shoppingCartArray);
+                const cardToRemove = document.getElementById(`${bookInArray.title}`);
+                cardToRemove.classList.add("d-none");
+              });
+            }
+          });
+          if (!isDuplicate) {
+            shoppingCartArray.push(book);
+          }
+          console.log(shoppingCartArray);
+        });
+        cardBody.appendChild(buyBtn);
       });
     })
     .catch((error) => console.log(error));
