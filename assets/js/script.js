@@ -17,11 +17,7 @@ const fetchBooks = () => {
       // creo un riferimento al .row
       const row = document.querySelector(".row");
 
-      /* const deleteCard = () => {
-        console.log("hello world");
-        const actualCard = document.getElementById(`${book.asin}`);
-        actualCard.remove();
-      }; */
+      const shoppingCart = [];
 
       // creo una card per ogni elemento
       booksObject.forEach((book) => {
@@ -56,19 +52,50 @@ const fetchBooks = () => {
         Price: $${book.price}`;
         cardBody.appendChild(cardText);
 
+        // genero il div d-flex che contiene i bottoni
+        /*   const buttonsContainer = document.createElement("div");
+        buttonsContainer.classList.add("row");
+        buttonsContainer.classList.add("col-12");
+        buttonsContainer.classList.add("row-cols-2");
+        buttonsContainer.classList.add("buttons-container");
+        cardBody.appendChild(buttonsContainer); */
+
         // genero il bottone scarta
         const discardBtn = document.createElement("button");
         discardBtn.classList.add("btn");
         discardBtn.classList.add("btn-danger");
         discardBtn.classList.add("delete-btn");
-        discardBtn.classList.add("position-absolute");
-        discardBtn.classList.add("bottom-0");
-        discardBtn.classList.add("start-0");
+        discardBtn.classList.add("d-block");
         discardBtn.innerText = "Delete book";
         discardBtn.addEventListener("click", () => {
           card.classList.add("d-none");
         });
         cardBody.appendChild(discardBtn);
+
+        // genero il bottone compra
+        const buyBtn = document.createElement("button");
+        buyBtn.classList.add("btn");
+        buyBtn.classList.add("btn-success");
+        buyBtn.classList.add("buy-btn");
+        buyBtn.classList.add("d-block");
+        buyBtn.innerText = "Buy book";
+        buyBtn.addEventListener("click", () => {
+          // variabile flag
+          let isDuplicate = false;
+
+          // per ogni elemento di shoppingCart: se l'oggetto selezionato esiste già non si potrà continuare
+          shoppingCart.forEach((bookInArray) => {
+            if (bookInArray.asin === book.asin && bookInArray.category === book.category && bookInArray.img === book.img && bookInArray.price === book.price && bookInArray.title === book.title) {
+              isDuplicate = true;
+              window.alert("You have already added this book to your shopping cart");
+            }
+          });
+          if (!isDuplicate) {
+            shoppingCart.push(book);
+          }
+          console.log(shoppingCart);
+        });
+        cardBody.appendChild(buyBtn);
 
         // genero il div che contiene la card
         const col = document.createElement("div");
