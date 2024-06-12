@@ -1,3 +1,4 @@
+let shoppingCartArray = [];
 const fetchBooks = () => {
   // mando la richiesta get attraverso fetch
   fetch("https://striveschool-api.herokuapp.com/books")
@@ -17,8 +18,6 @@ const fetchBooks = () => {
       // creo un riferimento al .row
       const row = document.querySelector(".row");
 
-      const shoppingCartArray = [];
-
       // creo una card per ogni elemento
       booksObject.forEach((book) => {
         const card = document.createElement("div");
@@ -36,7 +35,7 @@ const fetchBooks = () => {
         // genero il div card-body
         const cardBody = document.createElement("div");
         cardBody.classList.add("card-body");
-        cardBody.classList.add("postion-relative");
+        cardBody.classList.add("position-relative");
         card.appendChild(cardBody);
 
         // genero il card-title
@@ -87,6 +86,7 @@ const fetchBooks = () => {
           // se almeno un alemento dell'array ha un asin uguale a quello selezionato, quest'ultimo non viene pushato nell'array
           if (!shoppingCartArray.some((bookInArray) => bookInArray.asin === book.asin)) {
             shoppingCartArray.push(book);
+            localStorage.setItem("shoppingCart-memory", JSON.stringify(shoppingCartArray));
             const shoppingCartModalBody = document.querySelector(".modal-body");
             const item = document.createElement("div");
             item.classList.add("row", "mb-3");
@@ -143,4 +143,9 @@ const fetchBooks = () => {
 
 window.addEventListener("DOMContentLoaded", () => {
   fetchBooks();
+  const shoppingCartFromStorage = localStorage.getItem("shoppingCart-memory");
+  if (shoppingCartFromStorage) {
+    const shoppingCartFromStorageArray = JSON.parse(shoppingCartFromStorage);
+    shoppingCartArray = shoppingCartFromStorageArray;
+  }
 });
