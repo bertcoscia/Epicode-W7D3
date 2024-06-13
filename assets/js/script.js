@@ -28,7 +28,7 @@ const generateCards = booksObject => {
     // genero il card-text
     const cardText = document.createElement("p");
     cardText.className = "card-text";
-    cardText.innerText = `Category: ${book.category} Price: $${book.price}`;
+    cardText.innerHTML = `Category: ${book.category} <br> Price: $${book.price}`;
     cardBody.appendChild(cardText);
 
     // genero il button group
@@ -50,6 +50,7 @@ const generateCards = booksObject => {
     const buyBtn = document.createElement("button");
     buyBtn.className = "btn btn-success buy-btn";
     buyBtn.innerText = "Add to cart";
+    // invoco la funzione addToCart
     buyBtn.addEventListener("click", () => addToCart(book));
     buttonGroup.appendChild(buyBtn);
 
@@ -107,6 +108,7 @@ const addToCart = book => {
     deleteItemBtn.addEventListener("click", () => {
       shoppingCartArray.splice(shoppingCartArray.indexOf(book), 1);
       console.log("books in cart", shoppingCartArray);
+      localStorage.setItem("shoppingCart-memory", JSON.stringify(shoppingCartArray));
       const cardToRemove = document.getElementById(book.title);
       cardToRemove.remove();
     });
@@ -138,8 +140,7 @@ const fetchBooks = () => {
     .catch(error => console.log(error));
 };
 
-window.addEventListener("DOMContentLoaded", () => {
-  fetchBooks();
+const getBooksFromStorage = () => {
   const shoppingCartFromStorage = localStorage.getItem("shoppingCart-memory");
   if (shoppingCartFromStorage) {
     const shoppingCartFromStorageArray = JSON.parse(shoppingCartFromStorage);
@@ -148,25 +149,25 @@ window.addEventListener("DOMContentLoaded", () => {
     shoppingCartArray.forEach(book => {
       const shoppingCartModalBody = document.querySelector(".modal-body");
       const item = document.createElement("div");
-      item.classList.add("row", "mb-3");
+      item.className = "row mb-3";
       item.setAttribute("id", `${book.title}`);
 
       const itemImg = document.createElement("img");
       itemImg.setAttribute("src", `${book.img}`);
-      itemImg.classList.add("col-4");
+      itemImg.className = "col-4";
       item.appendChild(itemImg);
 
       const itemDescription = document.createElement("div");
-      itemDescription.classList.add("col-8", "row");
+      itemDescription.className = "col-8 row";
       item.appendChild(itemDescription);
 
       const itemName = document.createElement("h5");
-      itemName.classList.add("col-12");
+      itemName.className = "col-12";
       itemName.innerText = book.title;
       itemDescription.appendChild(itemName);
 
       const itemPriceAndDeleteContainer = document.createElement("div");
-      itemPriceAndDeleteContainer.classList.add("col-12", "d-flex", "justify-content-between");
+      itemPriceAndDeleteContainer.className = "col-12 d-flex justify-content-between";
 
       const itemPrice = document.createElement("p");
       itemPrice.innerText = `$${book.price}`;
@@ -187,9 +188,15 @@ window.addEventListener("DOMContentLoaded", () => {
       deleteItemBtn.addEventListener("click", () => {
         shoppingCartArray.splice(shoppingCartArray.indexOf(book), 1);
         console.log("books in cart", shoppingCartArray);
+        localStorage.setItem("shoppingCart-memory", JSON.stringify(shoppingCartArray));
         const cardToRemove = document.getElementById(`${book.title}`);
         cardToRemove.remove();
       });
     });
   }
+};
+
+window.addEventListener("DOMContentLoaded", () => {
+  fetchBooks();
+  getBooksFromStorage();
 });
