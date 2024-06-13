@@ -147,5 +147,51 @@ window.addEventListener("DOMContentLoaded", () => {
   if (shoppingCartFromStorage) {
     const shoppingCartFromStorageArray = JSON.parse(shoppingCartFromStorage);
     shoppingCartArray = shoppingCartFromStorageArray;
+    console.log("books in memory ", shoppingCartArray);
+    shoppingCartArray.forEach((book) => {
+      const shoppingCartModalBody = document.querySelector(".modal-body");
+      const item = document.createElement("div");
+      item.classList.add("row", "mb-3");
+      item.setAttribute("id", `${book.title}`);
+
+      const itemImg = document.createElement("img");
+      itemImg.setAttribute("src", `${book.img}`);
+      itemImg.classList.add("col-4");
+      item.appendChild(itemImg);
+
+      const itemDescription = document.createElement("div");
+      itemDescription.classList.add("col-8", "row");
+      item.appendChild(itemDescription);
+
+      const itemName = document.createElement("h5");
+      itemName.classList.add("col-12");
+      itemName.innerText = book.title;
+      itemDescription.appendChild(itemName);
+
+      const itemPriceAndDeleteContainer = document.createElement("div");
+      itemPriceAndDeleteContainer.classList.add("col-12", "d-flex", "justify-content-between");
+
+      const itemPrice = document.createElement("p");
+      itemPrice.innerText = `$${book.price}`;
+      itemPriceAndDeleteContainer.appendChild(itemPrice);
+
+      const deleteItemBtn = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      deleteItemBtn.setAttribute("width", "30");
+      deleteItemBtn.setAttribute("height", "30");
+      deleteItemBtn.setAttribute("fill", "currentColor");
+      deleteItemBtn.classList.add("bi", "bi-x-lg");
+      deleteItemBtn.setAttribute("viewBox", "0 0 16 16");
+      deleteItemBtn.innerHTML = `<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>`;
+      itemPriceAndDeleteContainer.appendChild(deleteItemBtn);
+      itemDescription.appendChild(itemPriceAndDeleteContainer);
+
+      shoppingCartModalBody.appendChild(item);
+      deleteItemBtn.addEventListener("click", () => {
+        shoppingCartArray.splice(shoppingCartArray.indexOf(book), 1);
+        console.log(shoppingCartArray);
+        const cardToRemove = document.getElementById(`${book.title}`);
+        cardToRemove.remove();
+      });
+    });
   }
 });
