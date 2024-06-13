@@ -105,12 +105,24 @@ const addToCart = book => {
 
     shoppingCartModalBody.appendChild(item);
 
+    const cartBadge = document.getElementById("cartBadge");
+
+    cartBadge.innerText = shoppingCartArray.length;
+
+    if (shoppingCartArray.length > 0) {
+      cartBadge.classList.remove("d-none");
+    }
+
     deleteItemBtn.addEventListener("click", () => {
       shoppingCartArray.splice(shoppingCartArray.indexOf(book), 1);
       console.log("books in cart", shoppingCartArray);
       localStorage.setItem("shoppingCart-memory", JSON.stringify(shoppingCartArray));
       const cardToRemove = document.getElementById(book.title);
       cardToRemove.remove();
+      cartBadge.innerText = shoppingCartArray.length;
+      if (shoppingCartArray.length === 0) {
+        cartBadge.classList.add("d-none");
+      }
     });
   } else {
     window.alert("You have already added this book to your shopping cart");
@@ -184,6 +196,14 @@ const getBooksFromStorage = () => {
 
       itemDescription.appendChild(itemPriceAndDeleteContainer);
 
+      const cartBadge = document.getElementById("cartBadge");
+
+      cartBadge.innerText = shoppingCartArray.length;
+
+      if (shoppingCartArray.length > 0) {
+        cartBadge.classList.remove("d-none");
+      }
+
       shoppingCartModalBody.appendChild(item);
       deleteItemBtn.addEventListener("click", () => {
         shoppingCartArray.splice(shoppingCartArray.indexOf(book), 1);
@@ -191,6 +211,10 @@ const getBooksFromStorage = () => {
         localStorage.setItem("shoppingCart-memory", JSON.stringify(shoppingCartArray));
         const cardToRemove = document.getElementById(`${book.title}`);
         cardToRemove.remove();
+        cartBadge.innerText = shoppingCartArray.length;
+        if (shoppingCartArray.length === 0) {
+          cartBadge.classList.add("d-none");
+        }
       });
     });
   }
