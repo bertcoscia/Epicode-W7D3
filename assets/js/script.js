@@ -2,7 +2,7 @@ let shoppingCartArray = [];
 const fetchBooks = () => {
   // mando la richiesta get attraverso fetch
   fetch("https://striveschool-api.herokuapp.com/books")
-    .then((responseObject) => {
+    .then(responseObject => {
       // controllo che la risposta sia andata a buon fine vedendo se la proprieta ok dell'oggetto di risposta sia vero o false
       if (responseObject.ok) {
         // in caso positivo ritorno l'oggetto di risposta convertito in JSON
@@ -12,14 +12,14 @@ const fetchBooks = () => {
         throw new Error("Couldn't get data");
       }
     })
-    .then((booksObject) => {
+    .then(booksObject => {
       console.log(booksObject);
 
       // creo un riferimento al .row
       const row = document.querySelector(".row");
 
       // creo una card per ogni elemento
-      booksObject.forEach((book) => {
+      booksObject.forEach(book => {
         const card = document.createElement("div");
         card.classList.add("card");
         card.setAttribute("id", `${book.asin}`);
@@ -84,7 +84,7 @@ const fetchBooks = () => {
 
         buyBtn.addEventListener("click", () => {
           // se almeno un alemento dell'array ha un asin uguale a quello selezionato, quest'ultimo non viene pushato nell'array
-          if (!shoppingCartArray.some((bookInArray) => bookInArray.asin === book.asin)) {
+          if (!shoppingCartArray.some(bookInArray => bookInArray.asin === book.asin)) {
             shoppingCartArray.push(book);
             localStorage.setItem("shoppingCart-memory", JSON.stringify(shoppingCartArray));
             const shoppingCartModalBody = document.querySelector(".modal-body");
@@ -117,28 +117,29 @@ const fetchBooks = () => {
             deleteItemBtn.setAttribute("width", "30");
             deleteItemBtn.setAttribute("height", "30");
             deleteItemBtn.setAttribute("fill", "currentColor");
-            deleteItemBtn.classList.add("bi", "bi-x-lg");
+            deleteItemBtn.classList.add("bi", "bi-trash3");
             deleteItemBtn.setAttribute("viewBox", "0 0 16 16");
-            deleteItemBtn.innerHTML = `<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>`;
+            deleteItemBtn.innerHTML = ` <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>`;
             itemPriceAndDeleteContainer.appendChild(deleteItemBtn);
+
             itemDescription.appendChild(itemPriceAndDeleteContainer);
 
             shoppingCartModalBody.appendChild(item);
 
             deleteItemBtn.addEventListener("click", () => {
               shoppingCartArray.splice(shoppingCartArray.indexOf(book), 1);
-              console.log(shoppingCartArray);
+              console.log("books in cart", shoppingCartArray);
               const cardToRemove = document.getElementById(`${book.title}`);
               cardToRemove.remove();
             });
           } else {
             window.alert("You have already added this book to your shopping cart");
           }
-          console.log(shoppingCartArray);
+          console.log("books in cart", shoppingCartArray);
         });
       });
     })
-    .catch((error) => console.log(error));
+    .catch(error => console.log(error));
 };
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -148,7 +149,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const shoppingCartFromStorageArray = JSON.parse(shoppingCartFromStorage);
     shoppingCartArray = shoppingCartFromStorageArray;
     console.log("books in memory ", shoppingCartArray);
-    shoppingCartArray.forEach((book) => {
+    shoppingCartArray.forEach(book => {
       const shoppingCartModalBody = document.querySelector(".modal-body");
       const item = document.createElement("div");
       item.classList.add("row", "mb-3");
@@ -179,16 +180,17 @@ window.addEventListener("DOMContentLoaded", () => {
       deleteItemBtn.setAttribute("width", "30");
       deleteItemBtn.setAttribute("height", "30");
       deleteItemBtn.setAttribute("fill", "currentColor");
-      deleteItemBtn.classList.add("bi", "bi-x-lg");
+      deleteItemBtn.classList.add("bi", "bi-trash3");
       deleteItemBtn.setAttribute("viewBox", "0 0 16 16");
-      deleteItemBtn.innerHTML = `<path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>`;
+      deleteItemBtn.innerHTML = ` <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>`;
       itemPriceAndDeleteContainer.appendChild(deleteItemBtn);
+
       itemDescription.appendChild(itemPriceAndDeleteContainer);
 
       shoppingCartModalBody.appendChild(item);
       deleteItemBtn.addEventListener("click", () => {
         shoppingCartArray.splice(shoppingCartArray.indexOf(book), 1);
-        console.log(shoppingCartArray);
+        console.log("books in cart", shoppingCartArray);
         const cardToRemove = document.getElementById(`${book.title}`);
         cardToRemove.remove();
       });
